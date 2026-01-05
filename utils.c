@@ -22,15 +22,11 @@ int pf_strlen(const char *s)
 	int n;
 
 	if (s == NULL)
-	{
 		return (0);
-	}
 
 	n = 0;
 	while (s[n] != '\0')
-	{
-		++n;
-	}
+		n++;
 	return (n);
 }
 
@@ -43,13 +39,9 @@ int pf_strlen(const char *s)
 int pf_is_printable(unsigned char c)
 {
 	if (c > 0 && c < 32)
-	{
 		return (0);
-	}
 	if (c >= 127)
-	{
 		return (0);
-	}
 	return (1);
 }
 
@@ -63,13 +55,9 @@ int pf_is_printable(unsigned char c)
 char pf_hex_digit(unsigned int v, int upper)
 {
 	if (v < 10)
-	{
 		return ((char)('0' + v));
-	}
 	if (upper)
-	{
 		return ((char)('A' + (v - 10)));
-	}
 	return ((char)('a' + (v - 10)));
 }
 
@@ -82,12 +70,8 @@ char pf_hex_digit(unsigned int v, int upper)
 char pf_rot13_char(char c)
 {
 	if (c >= 'a' && c <= 'z')
-	{
 		return ((char)('a' + (c - 'a' + 13) % 26));
-	}
 	if (c >= 'A' && c <= 'Z')
-	{
 		return ((char)('A' + (c - 'A' + 13) % 26));
-	}
 	return (c);
 }

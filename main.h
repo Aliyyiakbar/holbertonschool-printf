@@ -29,7 +29,6 @@ typedef struct pf_format_s
 	char spec;
 } pf_format_t;
 
-/* entry point */
 int _printf(const char *format, ...);
 
 /* buffer */
@@ -46,7 +45,7 @@ int pf_is_printable(unsigned char c);
 char pf_hex_digit(unsigned int v, int upper);
 char pf_rot13_char(char c);
 
-/* parsing + dispatch */
+/* parse + dispatch */
 int pf_parse(const char **p, pf_format_t *f, va_list *ap);
 int pf_handle(pf_buffer_t *b, pf_format_t *f, va_list *ap);
 

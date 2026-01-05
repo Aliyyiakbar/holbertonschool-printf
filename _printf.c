@@ -1,61 +1,56 @@
 #include "main.h"
 
 /**
- * _printf - produces output according to a format
+ * _printf - custom printf
  * @format: format string
  *
- * Return: number of characters printed, or -1 on error
+ * Return: number of chars printed, -1 on error
  */
 int _printf(const char *format, ...)
 {
 	va_list ap;
-	int count;
-	unsigned int i;
-	int (*f)(va_list);
+	pf_buffer_t b;
+	pf_format_t f;
+	const char *p;
 
 	if (format == NULL)
-	{
 		return (-1);
-	}
 
+	pf_buf_init(&b);
 	va_start(ap, format);
 
-	count = 0;
-	i = 0;
-	while (format[i] != '\0')
+	p = format;
+	while (*p != '\0')
 	{
-		if (format[i] != '%')
+		if (*p != '%')
 		{
-			_putchar(format[i]);
-			++count;
-			++i;
+			if (pf_buf_putc(&b, *p) == -1)
+				break;
+			p++;
 			continue;
 		}
 
-		++i;
-
-		if (format[i] == '\0')
+		p++;
+		if (*p == '\0')
 		{
-			va_end(ap);
-			return (-1);
+			b.err = 1;
+			break;
 		}
 
-		f = get_specifier(format[i]);
-
-		if (f != NULL)
+		if (pf_parse(&p, &f, &ap) == -1)
 		{
-			count += f(ap);
-		}
-		else
-		{
-			_putchar('%');
-			_putchar(format[i]);
-			count += 2;
+			b.err = 1;
+			break;
 		}
 
-		++i;
+		if (pf_handle(&b, &f, &ap) == -1)
+			break;
 	}
 
 	va_end(ap);
-	return (count);
+
+	if (pf_buf_flush(&b) == -1 || b.err)
+		return (-1);
+
+	return (b.len);
 }

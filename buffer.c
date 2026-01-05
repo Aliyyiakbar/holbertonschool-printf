@@ -22,14 +22,10 @@ int pf_buf_flush(pf_buffer_t *b)
 	ssize_t w;
 
 	if (b->err)
-	{
 		return (-1);
-	}
 
 	if (b->idx == 0)
-	{
 		return (0);
-	}
 
 	w = write(1, b->buf, b->idx);
 	if (w == -1 || w != (ssize_t)b->idx)
@@ -52,16 +48,12 @@ int pf_buf_flush(pf_buffer_t *b)
 int pf_buf_putc(pf_buffer_t *b, char c)
 {
 	if (b->err)
-	{
 		return (-1);
-	}
 
 	if (b->idx >= PF_BUF_SIZE)
 	{
 		if (pf_buf_flush(b) == -1)
-		{
 			return (-1);
-		}
 	}
 
 	b->buf[b->idx++] = c;
@@ -85,11 +77,8 @@ int pf_buf_putn(pf_buffer_t *b, const char *s, int n)
 	while (i < n)
 	{
 		if (pf_buf_putc(b, s[i]) == -1)
-		{
 			return (-1);
-		}
-
-		++i;
+		i++;
 	}
 	return (0);
 }
@@ -110,11 +99,8 @@ int pf_buf_pad(pf_buffer_t *b, char c, int n)
 	while (i < n)
 	{
 		if (pf_buf_putc(b, c) == -1)
-		{
 			return (-1);
-		}
-
-		++i;
+		i++;
 	}
 	return (0);
 }

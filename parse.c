@@ -23,25 +23,15 @@ static void pf_parse_flags(const char **p, pf_format_t *f)
 	while (**p == '-' || **p == '+' || **p == ' ' || **p == '#' || **p == '0')
 	{
 		if (**p == '-')
-		{
 			f->flags |= PF_F_MINUS;
-		}
-		else if (**p == '+')
-		{
+		if (**p == '+')
 			f->flags |= PF_F_PLUS;
-		}
-		else if (**p == ' ')
-		{
+		if (**p == ' ')
 			f->flags |= PF_F_SPACE;
-		}
-		else if (**p == '#')
-		{
+		if (**p == '#')
 			f->flags |= PF_F_HASH;
-		}
-		else if (**p == '0')
-		{
+		if (**p == '0')
 			f->flags |= PF_F_ZERO;
-		}
 
 		(*p)++;
 	}
@@ -88,9 +78,7 @@ static void pf_parse_precision(const char **p, pf_format_t *f, va_list *ap)
 	int pr;
 
 	if (**p != '.')
-	{
 		return;
-	}
 
 	(*p)++;
 	f->precision = 0;
@@ -99,14 +87,9 @@ static void pf_parse_precision(const char **p, pf_format_t *f, va_list *ap)
 	{
 		pr = va_arg(*ap, int);
 		if (pr >= 0)
-		{
 			f->precision = pr;
-		}
 		else
-		{
 			f->precision = -1;
-		}
-
 		(*p)++;
 		return;
 	}
@@ -140,9 +123,7 @@ int pf_parse(const char **p, pf_format_t *f, va_list *ap)
 	}
 
 	if (**p == '\0')
-	{
 		return (-1);
-	}
 
 	f->spec = **p;
 	(*p)++;
