@@ -1,27 +1,29 @@
 .TH _PRINTF 3 "January 2026" "Holberton School" "Library Functions Manual"
 .SH NAME
 _printf \- print formatted output to standard output
+
 .SH SYNOPSIS
 .B #include "main.h"
 .PP
 .BI "int _printf(const char *" format ", ...);"
+
 .SH DESCRIPTION
 The
 .B _printf()
 function writes formatted output to the standard output stream (stdout).
-It behaves like the standard
-.BR printf (3)
-in a simplified way.
+It is a simplified implementation inspired by
+.BR printf (3).
 
 The
 .I format
-string is a sequence of ordinary characters and conversion directives.
-Ordinary characters are printed as they appear.
-A conversion directive starts with the character
+string contains ordinary characters and conversion directives.
+A conversion directive begins with
 .B %
-and is followed by a conversion specifier.
+and may include, in this order: flags, field width, precision, a length modifier,
+and a conversion specifier.
 
-This implementation does not support flags, field width, precision, or length modifiers.
+This project supports a subset of the standard functionality and several custom
+specifiers described below.
 
 .SH CONVERSION SPECIFIERS
 .TP
@@ -29,24 +31,113 @@ This implementation does not support flags, field width, precision, or length mo
 Print a single character.
 .TP
 .B %s
-Print a string. If the string is NULL, it prints
+Print a string. If the argument is NULL, it prints
 .BR "(null)" .
-.TP
-.B %d
-Print a signed decimal integer.
-.TP
-.B %i
-Print a signed decimal integer (same behavior as
-.BR %d ).
 .TP
 .B %%
 Print a literal percent sign.
+.TP
+.B %d , %i
+Print a signed decimal integer.
+.TP
+.B %u
+Print an unsigned decimal integer.
+.TP
+.B %o
+Print an unsigned octal integer.
+.TP
+.B %x , %X
+Print an unsigned hexadecimal integer (lowercase for
+.BR %x ,
+uppercase for
+.BR %X ).
+.TP
+.B %p
+Print a pointer address in hexadecimal, prefixed with
+.BR 0x .
+If the pointer is NULL, it prints
+.BR "(nil)" .
+.PP
+Custom specifiers:
+.TP
+.B %b
+Print an unsigned integer in binary.
+.TP
+.B %S
+Print a string, but non-printable characters (ASCII 1..31 or >= 127) are printed as
+.BR "\\xHH" ,
+where
+.B HH
+is the uppercase hexadecimal value (always two digits).
+.TP
+.B %r
+Print a string in reverse.
+.TP
+.B %R
+Print a string encoded using rot13.
 
-Any other specifier after
-.B %
-is printed as
-.B %
-followed by that character.
+.SH FLAGS
+The following flags are handled for non-custom numeric conversions (such as
+.BR %d ,
+.BR %i ,
+.BR %u ,
+.BR %o ,
+.BR %x ,
+.BR %X ):
+.TP
+.B +
+For signed conversions, always print a sign.
+.TP
+.B " " (space)
+For signed conversions, print a leading space if no sign is printed.
+.TP
+.B #
+Use an alternate form: prefix
+.B 0
+for octal and
+.B 0x / 0X
+for hexadecimal (when the value is nonzero).
+
+The
+.B 0
+flag enables zero-padding and
+.B -
+left-justifies within the field width.
+
+.SH FIELD WIDTH
+Field width is supported as a number (for example
+.BR %8d )
+or as
+.BR * ,
+which reads the width from the next argument.
+A negative width is treated as left-justification.
+
+.SH PRECISION
+Precision is supported using a dot followed by a number (for example
+.BR %.5d )
+or by
+.BR * .
+For numeric conversions, precision controls the minimum number of digits.
+If precision is zero and the value is zero, nothing is printed for the number
+(with the standard octal
+.B #
+exception producing a single
+.BR 0 ).
+
+.SH LENGTH MODIFIERS
+The following length modifiers are handled for:
+.BR d ,
+.BR i ,
+.BR u ,
+.BR o ,
+.BR x ,
+.BR X :
+.TP
+.B l
+Use long / unsigned long.
+.TP
+.B h
+Use short / unsigned short.
 
 .SH RETURN VALUE
 On success,
@@ -59,15 +150,24 @@ is NULL, or if the format string ends with a single
 (with no specifier), it returns
 .BR -1 .
 
+.SH NOTES
+This implementation uses a local output buffer (1024 bytes) to reduce the number
+of system calls to
+.BR write (2).
+
 .SH EXAMPLES
 .nf
 _printf("Hello %s\\n", "world");
-_printf("Value: %d%%\\n", 98);
-_printf("%c %i\\n", 'A', -123);
+_printf("%b\\n", 98);
+_printf("%S\\n", "Best\\nSchool");
+_printf("Value: %+8.4d\\n", 42);
+_printf("ptr=%p\\n", (void *)0);
+_printf("%r %R\\n", "abcd", "Hello");
 .fi
 
 .SH SEE ALSO
-.BR printf (3)
+.BR printf (3),
+.BR write (2)
 
 .SH AUTHORS
 Written for the Holberton School printf project.
