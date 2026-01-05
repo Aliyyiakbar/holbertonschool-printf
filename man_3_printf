@@ -1,0 +1,73 @@
+.TH _PRINTF 3 "January 2026" "Holberton School" "Library Functions Manual"
+.SH NAME
+_printf \- print formatted output to standard output
+.SH SYNOPSIS
+.B #include "main.h"
+.PP
+.BI "int _printf(const char *" format ", ...);"
+.SH DESCRIPTION
+The
+.B _printf()
+function writes formatted output to the standard output stream (stdout).
+It behaves like the standard
+.BR printf (3)
+in a simplified way.
+
+The
+.I format
+string is a sequence of ordinary characters and conversion directives.
+Ordinary characters are printed as they appear.
+A conversion directive starts with the character
+.B %
+and is followed by a conversion specifier.
+
+This implementation does not support flags, field width, precision, or length modifiers.
+
+.SH CONVERSION SPECIFIERS
+.TP
+.B %c
+Print a single character.
+.TP
+.B %s
+Print a string. If the string is NULL, it prints
+.BR "(null)" .
+.TP
+.B %d
+Print a signed decimal integer.
+.TP
+.B %i
+Print a signed decimal integer (same behavior as
+.BR %d ).
+.TP
+.B %%
+Print a literal percent sign.
+
+Any other specifier after
+.B %
+is printed as
+.B %
+followed by that character.
+
+.SH RETURN VALUE
+On success,
+.B _printf()
+returns the number of characters printed (excluding the terminating null byte).
+If
+.I format
+is NULL, or if the format string ends with a single
+.B %
+(with no specifier), it returns
+.BR -1 .
+
+.SH EXAMPLES
+.nf
+_printf("Hello %s\\n", "world");
+_printf("Value: %d%%\\n", 98);
+_printf("%c %i\\n", 'A', -123);
+.fi
+
+.SH SEE ALSO
+.BR printf (3)
+
+.SH AUTHORS
+Written for the Holberton School printf project.
